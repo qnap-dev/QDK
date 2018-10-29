@@ -60,7 +60,7 @@ CMD_WGET="/usr/bin/wget"
 CMD_WLOG="/sbin/write_log"
 CMD_XARGS="/usr/bin/xargs"
 CMD_7Z="/usr/local/sbin/7z"
-
+CMD_SR_CLI="/usr/local/apim/bin/sr-cli"
 
 ##### System definitions #####
 SYS_EXTRACT_DIR="$(pwd)"
@@ -735,6 +735,22 @@ get_qpkg_status(){
 	SYS_QPKG_SERVICE_ENABLED="$($CMD_GETCFG $QPKG_NAME $SYS_QPKG_CONF_FIELD_ENABLE -d "TRUE" -f $SYS_QPKG_CONFIG_FILE)"
 }
 
+#####################################
+# register applications and consumers
+#####################################
+register_apim_station() {
+	[ ! -x $CMD_SR_CLI ] && return
+	[ ! -f "$SYS_QPKG_DIR/apim.json.enc" ] && return
+	output=$($CMD_SR_CLI station.register "$SYS_QPKG_DIR/apim.json.enc" 2>&1)
+	if [ $? != 0 ]; then
+		if [ -x "/usr/local/sbin/notify" ]; then
+			/usr/local/sbin/notify send -A A039 -C C001 -M 999 -l error -t 3 "[{0}] {1}" "$QPKG_DISPLAY_NAME" "$output"
+		else
+			err_log "[$QPKG_DISPLAY_NAME] $output."
+		fi
+	fi
+}
+
 #######################
 # Set QPKG information
 #######################
@@ -1159,6 +1175,19 @@ if [ -x $SYS_INIT_DIR/$QPKG_SERVICE_PROGRAM ]; then
 	$CMD_SYNC
 fi
 
+# Deregister station (applications and consumers)
+INSTALL_PATH=\$(getcfg -f "$SYS_QPKG_CONFIG_FILE" "$QPKG_NAME" "Install_Path")
+if [ -x "$CMD_SR_CLI" ] && [ -f "\$INSTALL_PATH/apim.json.enc" ]; then
+	output=\$($CMD_SR_CLI station.deregister "\$INSTALL_PATH/apim.json.enc" 2>&1)
+	if [ "\$?" != "0" ]; then
+		if [ -x "/usr/local/sbin/notify" ]; then
+			/usr/local/sbin/notify send -A A039 -C C001 -M 998 -l error -t 3 "[{0}] {1}" "$QPKG_DISPLAY_NAME" "\$output"
+		else
+			/sbin/log_tool -t2 -uSystem -p127.0.0.1 -mlocalhost -a "[$QPKG_DISPLAY_NAME] \$output."
+		fi
+	fi
+fi
+
 # Package specific routines as defined in package_routines.
 $PKG_PRE_REMOVE
 
@@ -1278,7 +1307,7 @@ post_install(){
 	copy_qpkg_icons
 	link_start_stop_script
 	register_qpkg
-
+	register_apim_station
 	# Package specific routines as defined in package_routines.
 	call_defined_routine pkg_post_install
 }
