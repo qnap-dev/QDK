@@ -751,6 +751,22 @@ register_apim_station() {
 	fi
 }
 
+########################################
+# deregister applications and consumers
+########################################
+deregister_apim_station() {
+	[ ! -x $CMD_SR_CLI ] && return
+	[ ! -f "$SYS_QPKG_DIR/apim.json.enc" ] && return
+	output=$($CMD_SR_CLI station.deregister "$SYS_QPKG_DIR/apim.json.enc" 2>&1)
+	if [ $? != 0 ]; then
+		if [ -x "/usr/local/sbin/notify" ]; then
+			/usr/local/sbin/notify send -A A039 -C C001 -M 999 -l error -t 3 "[{0}] {1}" "$QPKG_DISPLAY_NAME" "$output"
+		else
+			err_log "[$QPKG_DISPLAY_NAME] $output."
+		fi
+	fi
+}
+
 #######################
 # Set QPKG information
 #######################
@@ -1279,6 +1295,7 @@ pre_install(){
 
 	$CMD_MKDIR -p $SYS_QPKG_DIR
 
+	deregister_apim_station
 	# Package specific routines as defined in package_routines.
 	call_defined_routine pkg_pre_install
 }
