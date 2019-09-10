@@ -521,7 +521,7 @@ do_code_signing(){
 	fi
 	[ -z "$QNAP_CODE_SIGNING_SERVER_IP" ] && QNAP_CODE_SIGNING_SERVER_IP=$DEFAULT_QNAP_CODE_SIGNING_SERVER_IP
 	[ -z "$QNAP_CODE_SIGNING_SERVER_PORT" ] && QNAP_CODE_SIGNING_SERVER_PORT=$DEFAULT_QNAP_CODE_SIGNING_SERVER_PORT
-	$CS_PYTHON "${QDK_SCRIPTS_DIR}/codesigning_qpkg.py" cert="${QDK_SCRIPTS_DIR}/codesigning_cert.pem" cwd="`pwd`" buildpath=$build_dir csv="${QNAP_CODE_SIGNING_CSV}" server=${QNAP_CODE_SIGNING_SERVER_IP}:${QNAP_CODE_SIGNING_SERVER_PORT} >code_signing.log 2>&1
+	$CS_PYTHON "${QDK_SCRIPTS_DIR}/codesigning_qpkg.py" cwd="`pwd`" buildpath=$build_dir csv="${QNAP_CODE_SIGNING_CSV}" server=${QNAP_CODE_SIGNING_SERVER_IP}:${QNAP_CODE_SIGNING_SERVER_PORT} >code_signing.log 2>&1
 	if [ $? != 0 ]; then
 		err_msg "$QDK_QPKG_FILE: Failed to add anti-tamper support"
 	fi
@@ -923,7 +923,7 @@ add_qpkg_signature(){
 		[ -z "$QNAP_CODE_SIGNING_SERVER_IP" ] && QNAP_CODE_SIGNING_SERVER_IP=$DEFAULT_QNAP_CODE_SIGNING_SERVER_IP
 		[ -z "$QNAP_CODE_SIGNING_SERVER_PORT" ] && QNAP_CODE_SIGNING_SERVER_PORT=$DEFAULT_QNAP_CODE_SIGNING_SERVER_PORT
 		openssl dgst -sha1 -binary "${QDK_QPKG_FILE}" > "${QDK_QPKG_FILE}.sha"
-		$CS_PYTHON "${QDK_SCRIPTS_DIR}/codesigning_qpkg_cms.py" cert="${QDK_SCRIPTS_DIR}/codesigning_cert.pem" \
+		$CS_PYTHON "${QDK_SCRIPTS_DIR}/codesigning_qpkg_cms.py" \
 			cwd="`pwd`" server=${QNAP_CODE_SIGNING_SERVER_IP}:${QNAP_CODE_SIGNING_SERVER_PORT} \
 			in="${QDK_QPKG_FILE}.sha" out="${QDK_QPKG_FILE}.msg" 2>&1 | tee -a code_signing.log
 		/bin/rm ${QDK_QPKG_FILE}.sha
@@ -1621,7 +1621,7 @@ add_code_signing(){
 	if [ -z "$PRIVATE_KEY" ]; then
 		# Send qpkg digest to server
 		verbose_msg "Connecting to code signing server to create digital signature..."
-		$CS_PYTHON "${QDK_SCRIPTS_DIR}/codesigning_qpkg_cms.py" cert="${QDK_SCRIPTS_DIR}/codesigning_cert.pem" server=${QNAP_CODE_SIGNING_SERVER_IP}:${QNAP_CODE_SIGNING_SERVER_PORT} qpkgname=${QPKG_NAME} version=${QPKG_VER} in="${qpkg}.sha" out="${qpkg}.msg" 2>&1 | tee -a code_signing.log
+		$CS_PYTHON "${QDK_SCRIPTS_DIR}/codesigning_qpkg_cms.py" server=${QNAP_CODE_SIGNING_SERVER_IP}:${QNAP_CODE_SIGNING_SERVER_PORT} qpkgname=${QPKG_NAME} version=${QPKG_VER} in="${qpkg}.sha" out="${qpkg}.msg" 2>&1 | tee -a code_signing.log
 	else
 		# 3rd party, not connected to server, sign using local certificate and private key
 		verbose_msg "Creating code signing digital signature..."
