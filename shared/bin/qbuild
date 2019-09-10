@@ -515,7 +515,7 @@ do_code_signing(){
 	local build_dir="${1:-build.$$}"
 	msg "Connecting to code signing server to create anti-tampering data..."
 	[ -z "$QNAP_CODE_SIGNING_CSV" ] && QNAP_CODE_SIGNING_CSV="build_sign.csv"
-	if [ ! -f "QNAP_CODE_SIGNING_CSV" ]; then
+	if [ ! -f "$QNAP_CODE_SIGNING_CSV" ]; then
 		msg "Can't find $QNAP_CODE_SIGNING_CSV, ignore anti-tamper"
 		return 0
 	fi
