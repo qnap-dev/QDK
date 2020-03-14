@@ -667,7 +667,7 @@ add_qpkg_header(){
 			reject_platform=
 			;;
 		arm-x31)
-			cpu_arch="armv7l"
+			cpu_arch="armv7h"
 			reject_platform="ARM_AL"
 			;;
 		arm-x41)
