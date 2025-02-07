@@ -408,10 +408,8 @@ store_config(){
 		set_qpkg_config "$file" "$new_md5sum"
 		# Files relative to QPKG directory are changed to full path.
 		[ -z "${file##/*}" ] || file="$SYS_QPKG_DIR/$file"
-		current_md5sum=$($CMD_MD5SUM "$file" 2>/dev/null | $CMD_CUT -d' ' -f1)
-		if [ "$orig_md5sum" = "$current_md5sum" ] || [ "$new_md5sum" = "$current_md5sum" ]; then
-			: Use new file
-		elif [ -f $file ]; then
+		if [ -f $file ]; then
+			current_md5sum=$($CMD_MD5SUM "$file" 2>/dev/null | $CMD_CUT -d' ' -f1)
 			if [ -z "$orig_md5sum" ]; then
 				$CMD_MV $file ${file}.qdkorig
 				if [ -x "/usr/local/sbin/notify" ]; then
@@ -419,7 +417,9 @@ store_config(){
 				else
 					log "[$PREFIX] $QPKG_DISPLAY_NAME saved ${file} as ${file}.qdkorig."
 				fi
-			elif [ "$orig_md5sum" = "$new_md5sum" ]; then
+			elif [ "$orig_md5sum" = "$current_md5sum" ] || [ "$new_md5sum" = "$current_md5sum" ]; then
+				: Use new file
+   			elif [ "$orig_md5sum" = "$new_md5sum" ]; then
 				$CMD_TAR rf $SYS_TAR_CONFIG $file 2>/dev/null
 			else
 				$CMD_MV $file ${file}.qdksave
