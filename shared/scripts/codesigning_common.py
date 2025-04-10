@@ -128,6 +128,14 @@ def create_db(db):
     conn.commit()
     conn.close()
 
+def data_to_string(data):
+    ret = ''
+    if isinstance(data, str):
+        ret = data
+    else:
+        ret = data.decode('utf-8')
+    return ret
+
 def read_csv(csv_file):
     try:
         with open(csv_file, 'r') as f:
@@ -138,7 +146,7 @@ def read_csv(csv_file):
                     if len(row) == 0: # empty line
                         continue
                     if (row[0] != "" and row[0] != "\xef\xbb\xbf"):
-                        package = unicode(row[0],"utf-8").strip()
+                        package = data_to_string(row[0]).strip()
                         if package != "" and package[0] == "#": # a line of comment
                             continue
                     else:
@@ -147,11 +155,11 @@ def read_csv(csv_file):
                         logging.error("Line '%s' in csv has less than 3 columns" % ','.join(row))
                         sys.exit(CSV_ERROR)
                     if (row[1] != "" and row[1] != "\xef\xbb\xbf"):
-                        relative_path = unicode(row[1],"utf-8").strip()
+                        relative_path = data_to_string(row[1]).strip()
                     else:
                         relative_path = ""
                     if (row[2] != "" and row[2] != "\xef\xbb\xbf"):
-                        absolute_path = unicode(row[2],"utf-8").strip()
+                        absolute_path = data_to_string(row[2]).strip()
                     else:
                         absolute_path = ""
                     output.append([package,relative_path,absolute_path])
@@ -173,6 +181,7 @@ def update_packages(db, csv_file):
     sql_update_package = "UPDATE SignedFile SET Package = ? WHERE Path = ?"
 
     conn = sqlite3.connect(db)
+    conn.text_factory = str
     cur = conn.cursor()
     for row in rows:
         if (row[0] != ""):
@@ -223,9 +232,8 @@ def check_for_tgz(temp_folder, output_tgz_file):
 
 def create_tgz(temp_folder, output_tgz_file):
     # Tar the files in temp folder
-    command = "tar -czf %s ."
-    command = command % (output_tgz_file)
-    sp = subprocess.Popen(command.split(),cwd=temp_folder,stdout=subprocess.PIPE)
+    command = ["tar","-czf",output_tgz_file,"."]
+    sp = subprocess.Popen(command,cwd=temp_folder,stdout=subprocess.PIPE)
     out = sp.communicate()[0]
     if sp.returncode != 0:
         logging.error(out)
@@ -242,20 +250,28 @@ def sign_files(kwargs):
         url = url + "/" + kwargs["version"]
     elif key_type == "qpkg":
         url = url + "/" + kwargs["qpkgname"] + "/" + kwargs["version"]
-    command = "curl %s --connect-timeout 60 --max-time 600 --retry 3 -X POST -F token=%s -F file=@%s https://%s"
-    if "cert" in kwargs:
-        if not os.path.isfile(kwargs["cert"]):
-            logging.error("Cannot find certificate file %s" % kwargs["cert"])
-            sys.exit(1)
-        command = command % ("--cacert %s" % kwargs["cert"],kwargs["token"],tgz_file_name,url)
-    else:
-        command = command % ("-k",kwargs["token"],tgz_file_name,url)
+    command = ["curl",
+                "-k",
+                "--connect-timeout", "60",
+                "--max-time", "600",
+                "--retry", "3",
+                "-X", "POST",
+                "-F", "token=%s" % kwargs["token"],
+                "-F", "file=@%s" % tgz_file_name]
+    if "key_ver" in kwargs:
+        command = command + ["-F","key_ver=%s" % kwargs["key_ver"]]
+    command.append("https://%s" % url)
+    logging.info(command)
     try:
-        sp = subprocess.Popen(command.split(),stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+        sp = subprocess.Popen(command,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
         out,err = sp.communicate()
         if sp.returncode != 0:
             logging.error("curl error %s" % err)
             sys.exit(CONNECT_ERROR)
+        try:
+            out = out.decode()
+        except (UnicodeDecodeError, AttributeError):
+            pass
         response = json.loads(out)
         if response["error"] != 0:
             logging.error("Error message from server: %s" % response["msg"])
@@ -274,20 +290,28 @@ def sign_cms(kwargs):
         url = url + "/" + kwargs["version"]
     elif key_type == "qpkg":
         url = url + "/" + kwargs["qpkgname"] + "/" + kwargs["version"]
-    command = "curl %s --connect-timeout 60 --max-time 600 --retry 3 -X POST -F token=%s -F file=@%s https://%s"
-    if "cert" in kwargs:
-        if not os.path.isfile(kwargs["cert"]):
-            logging.error("Cannot find certificate file %s" % kwargs["cert"])
-            sys.exit(1)
-        command = command % ("--cacert %s" % kwargs["cert"],kwargs["token"],file_name,url)
-    else:
-        command = command % ("-k",kwargs["token"],file_name,url)
+    command = ["curl",
+                "-k",
+                "--connect-timeout", "60",
+                "--max-time", "600",
+                "--retry", "3",
+                "-X", "POST",
+                "-F", "token=%s" % kwargs["token"],
+                "-F", "file=@%s" % file_name]
+    if "key_ver" in kwargs:
+        command = command + ["-F","key_ver=%s" % kwargs["key_ver"]]
+    command.append("https://%s" % url)
+    logging.info(command)
     try:
-        sp = subprocess.Popen(command.split(),stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+        sp = subprocess.Popen(command,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
         out,err = sp.communicate()
         if sp.returncode != 0:
             logging.error("curl error %s" % err)
             sys.exit(CONNECT_ERROR)
+        try:
+            out = out.decode()
+        except (UnicodeDecodeError, AttributeError):
+            pass
         response = json.loads(out)
         if response["error"] != 0:
             logging.error("Error message from server: %s" % response["msg"])
@@ -302,17 +326,16 @@ def b64_decode(encoded):
     encoded_file.write(encoded)
     encoded_file.flush()
     decoded_file = tempfile.NamedTemporaryFile(mode="w+b")
-    command = "openssl enc -d -base64 -A -in %s -out %s"
-    command = command % (encoded_file.name, decoded_file.name)
+    command = ["openssl","enc","-d","-base64","-A","-in",encoded_file.name,"-out",decoded_file.name]
     try:
-        returncode = subprocess.call(command.split())
+        returncode = subprocess.call(command)
         if returncode != 0:
             logging.error("Failed to decode signature of file: %s" % path)
             sys.exit(1)
         else:
             return decoded_file.read()
     except Exception as e:
-        logging.error("Failed to run openssl command")
+        logging.error("Failed to run openssl command: %s" % command)
         sys.exit(1)
 
 def add_cert_to_db(certificate_dict, sqlite_file_name):
