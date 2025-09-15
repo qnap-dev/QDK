@@ -117,10 +117,15 @@ SYS_QPKG_CONF_FIELD_SHARE_DEL_ACTION="Share_Del_Action"
 SYS_QPKG_CONF_FIELD_ENTER_READDELETE_ACTION="Enter_ReadDelete_Action"
 SYS_QPKG_CONF_FIELD_LEAVE_READDELETE_ACTION="Leave_ReadDelete_Action"
 SYS_QPKG_CONF_FIELD_ACTION_TIMEOUT="Action_Timeout"
-SYS_QPKG_CONF_FIELD_ENTER_HERO_LOW_SPACE="Enter_Hero_Low_space"
-SYS_QPKG_CONF_FIELD_LEAVE_HERO_LOW_SPACE="Leave_Hero_Low_space"
-SYS_QPKG_CONF_FIELD_ENTER_HERO_CRITICAL_LOW="Enter_Hero_Critical_Low"
-SYS_QPKG_CONF_FIELD_LEAVE_HERO_CRITICAL_LOW="Leave_Hero_Critical_Low"
+QPKG_CONF_FIELD_ENTER_HERO_NOTICE_LOW="Enter_Hero_Notice_Low"
+QPKG_CONF_FIELD_LEAVE_HERO_NOTICE_LOW="Leave_Hero_Notice_Low"
+QPKG_CONF_FIELD_ENTER_HERO_CAUTION_LOW="Enter_Hero_Caution_Low"
+QPKG_CONF_FIELD_LEAVE_HERO_CAUTION_LOW="Leave_Hero_Caution_Low"
+QPKG_CONF_FIELD_ENTER_HERO_WARNING_LOW="Enter_Hero_Warning_Low"
+QPKG_CONF_FIELD_LEAVE_HERO_WARNING_LOW="Leave_Hero_Warning_Low"
+QPKG_CONF_FIELD_ENTER_HERO_CRITICAL_LOW="Enter_Hero_Critical_Low"
+QPKG_CONF_FIELD_LEAVE_HERO_CRITICAL_LOW="Leave_Hero_Critical_Low"
+
 PREFIX="App Center"
 # The following variables are assigned values at run-time.
 SYS_HOSTNAME=$($CMD_HOSTNAME)
@@ -869,28 +874,52 @@ set_qpkg_action_timeout(){
 	fi
 }
 
-set_qpkg_enter_hero_low_space(){
-	if [ -n "$QPKG_ENTER_HERO_LOW_SPACE_ACTION" ]; then
-                set_qpkg_field $SYS_QPKG_CONF_FIELD_ENTER_HERO_LOW_SPACE "$QPKG_ENTER_HERO_LOW_SPACE_ACTION"
+set_qpkg_enter_hero_notice_low(){
+        if [ -n "$QPKG_ENTER_HERO_NOTICE_LOW_ACTION" ]; then
+                set_qpkg_field $QPKG_CONF_FIELD_ENTER_HERO_NOTICE_LOW "$QPKG_ENTER_HERO_NOTICE_LOW_ACTION"
         fi
 }
 
-set_qpkg_leave_hero_low_space(){
-	if [ -n "$QPKG_LEAVE_HERO_LOW_SPACE_ACTION" ]; then
-		set_qpkg_field $SYS_QPKG_CONF_FIELD_LEAVE_HERO_LOW_SPACE "$QPKG_LEAVE_HERO_LOW_SPACE_ACTION"
-	fi
+set_qpkg_leave_hero_notice_low(){
+        if [ -n "$QPKG_LEAVE_HERO_NOTICE_LOW_ACTION" ]; then
+                set_qpkg_field $QPKG_CONF_FIELD_LEAVE_HERO_NOTICE_LOW "$QPKG_LEAVE_HERO_NOTICE_LOW_ACTION"
+        fi
+}
+
+set_qpkg_enter_hero_caution_low(){
+        if [ -n "$QPKG_ENTER_HERO_CAUTION_LOW_ACTION" ]; then
+                set_qpkg_field $QPKG_CONF_FIELD_ENTER_HERO_CAUTION_LOW "$QPKG_ENTER_HERO_CAUTION_LOW_ACTION"
+        fi
+}
+
+set_qpkg_leave_hero_caution_low(){
+        if [ -n "$QPKG_LEAVE_HERO_CAUTION_LOW_ACTION" ]; then
+                set_qpkg_field $QPKG_CONF_FIELD_LEAVE_HERO_CAUTION_LOW "$QPKG_LEAVE_HERO_CAUTION_LOW_ACTION"
+        fi
+}
+
+set_qpkg_enter_hero_warning_low(){
+        if [ -n "$QPKG_ENTER_HERO_WARNING_LOW_ACTION" ]; then
+                set_qpkg_field $QPKG_CONF_FIELD_ENTER_HERO_WARNING_LOW "$QPKG_ENTER_HERO_WARNING_LOW_ACTION"
+        fi
+}
+
+set_qpkg_leave_hero_warning_low(){
+        if [ -n "$QPKG_LEAVE_HERO_WARNING_LOW_ACTION" ]; then
+                set_qpkg_field $QPKG_CONF_FIELD_LEAVE_HERO_WARNING_LOW "$QPKG_LEAVE_HERO_WARNING_LOW_ACTION"
+        fi
 }
 
 set_qpkg_enter_hero_critical_low(){
-	if [ -n "$QPKG_ENTER_HERO_CRITICAL_LOW_ACTION" ]; then
-		set_qpkg_field $SYS_QPKG_CONF_FIELD_ENTER_HERO_CRITICAL_LOW "$QPKG_ENTER_HERO_CRITICAL_LOW_ACTION"
-	fi
+        if [ -n "$QPKG_ENTER_HERO_CRITICAL_LOW_ACTION" ]; then
+                set_qpkg_field $QPKG_CONF_FIELD_ENTER_HERO_CRITICAL_LOW "$QPKG_ENTER_HERO_CRITICAL_LOW_ACTION"
+        fi
 }
 
 set_qpkg_leave_hero_critical_low(){
-	if [ -n "$QPKG_LEAVE_HERO_CRITICAL_LOW_ACTION" ]; then
-		set_qpkg_field $SYS_QPKG_CONF_FIELD_LEAVE_HERO_CRITICAL_LOW "$QPKG_LEAVE_HERO_CRITICAL_LOW_ACTION"
-	fi
+        if [ -n "$QPKG_LEAVE_HERO_CRITICAL_LOW_ACTION" ]; then
+                set_qpkg_field $QPKG_CONF_FIELD_LEAVE_HERO_CRITICAL_LOW "$QPKG_LEAVE_HERO_CRITICAL_LOW_ACTION"
+        fi
 }
 
 ############################################################
@@ -942,8 +971,12 @@ register_qpkg(){
 	set_qpkg_enter_readdelete_action
 	set_qpkg_leave_readdelete_action
 	set_qpkg_action_timeout
-	set_qpkg_enter_hero_low_space
-	set_qpkg_leave_hero_low_space
+	set_qpkg_enter_hero_notice_low
+	set_qpkg_leave_hero_notice_low
+	set_qpkg_enter_hero_caution_low
+	set_qpkg_leave_hero_caution_low
+	set_qpkg_enter_hero_warning_low
+	set_qpkg_leave_hero_warning_low
 	set_qpkg_enter_hero_critical_low
 	set_qpkg_leave_hero_critical_low
 }
