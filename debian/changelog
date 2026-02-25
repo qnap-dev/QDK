@@ -1,0 +1,5 @@
+qdk (2.5.0) UNRELEASED; urgency=medium
+
+  * Add Debian packaging and GitHub release workflow
+
+ -- QNAP QDK <qdk@qnap.com>  Mon, 09 Mar 2026 16:21:45 +0800

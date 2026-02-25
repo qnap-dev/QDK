@@ -1,0 +1,18 @@
+#!/usr/bin/make -f
+
+include /usr/share/dpkg/architecture.mk
+
+%:
+	dh $@
+
+override_dh_shlibdeps:
+ifneq ($(DEB_BUILD_GNU_TYPE),$(DEB_HOST_GNU_TYPE))
+	dh_shlibdeps \
+		--dpkg-shlibdeps-params=--ignore-missing-info \
+		--dpkg-shlibdeps-params=-l/usr/$(DEB_HOST_GNU_TYPE)/lib
+else
+	dh_shlibdeps --dpkg-shlibdeps-params=--ignore-missing-info
+endif
+
+override_dh_builddeb:
+	dh_builddeb -- -Zgzip

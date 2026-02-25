@@ -1,0 +1,10 @@
+Format-Specification: http://wiki.debian.org/Proposals/CopyrightFormat
+Upstream-Name: qdk
+Upstream-Maintainer: QNAP QDK <qdk@qnap.com>
+Upstream-Source: https://github.com/qnap-dev/QDK
+
+Files: *
+Copyright: (C) 2026 QNAP Systems, Inc. All Rights Reserved.
+License: GPL-3
+ The full text of the GPL is distributed in
+ /usr/share/common-licenses/GPL-3 on Debian systems.

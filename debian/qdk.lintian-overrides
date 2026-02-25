@@ -1,0 +1,2 @@
+# qpkg_encrypt is a private helper binary for qbuild and is not intended to be invoked directly by users.
+qdk: binary-without-manpage usr/bin/qpkg_encrypt
