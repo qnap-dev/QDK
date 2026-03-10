@@ -1,0 +1,2 @@
+shared/* usr/share/QDK/
+src/bin/qpkg_encrypt usr/bin/

@@ -1,0 +1,13 @@
+# Use Ubuntu 18.04 to keep GLIBC at 2.27, ensuring compatibility with older systems.
+FROM ubuntu:18.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update \
+    && apt-get install -y \
+        build-essential \
+        crossbuild-essential-arm64 \
+        crossbuild-essential-armhf \
+        debhelper \
+        devscripts \
+    && rm -rf /var/lib/apt/lists/*

@@ -1,0 +1,20 @@
+Source: qdk
+Section: utils
+Priority: optional
+Build-Depends: debhelper (>= 11)
+Maintainer: QNAP QDK <qdk@qnap.com>
+Standards-Version: 4.1.4
+
+Package: qdk
+Architecture: amd64 arm64 armhf
+Depends: pv,
+    xz-utils,
+    rsync,
+    gnupg2,
+    curl,
+    openssl,
+    bsdextrautils | bsdmainutils,
+    ${shlibs:Depends},
+    ${misc:Depends}
+Description: QNAP Development Toolkit
+ Provides tools to build QNAP packages.

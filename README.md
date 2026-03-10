@@ -40,6 +40,10 @@ https://cheng-yuan-hong.gitbook.io/qdk-quick-start-guide/
 
 # Update new feature
 
+2.5.0
+
+    - Add Debian packaging and GitHub release workflow
+
 2.3.14
 
     - Add HSM (USB Token) support while doing QNAP code signing
