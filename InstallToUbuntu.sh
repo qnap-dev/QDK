@@ -15,6 +15,7 @@ case "$1" in
 		echo "Compiler QPKG encrypt"
 		cd src
 		make
+		cp bin/qpkg_encrypt /bin
 		cd ../
 		echo "Install QDK"
 		cp -rf ./shared /usr/share/QDK

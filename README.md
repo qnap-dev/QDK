@@ -1,24 +1,24 @@
 # QDK
-The project is fork qnap SDK 2.2.4
+The project is forked from QNAP SDK 2.2.4
 
-# QPKG Development Guidelines
-----------------------------------
+## QPKG Development Guidelines
 
-# Description
+## Description
 
 QDK is used to build QPKG files/applications for QNAP Turbo NAS. A QPKG file makes it easy for anyone to install and remove packages. It also gives a package maintainer almost total control on how the package is installed on the NAS.
 The major design goal of QDK is to make it easy for the package maintainer to create simple QPKG files and at the same time also support more advanced packages. QDK started out as a simple modification of the first official release of the QPKG SDK, but now supersedes it. It includes many new features like architecture check at installation, support for digital signatures, different compression algorithms, a comprehensive option to check that other required QPKG packages are installed (or that conflicting packages are not installed), and a powerful build script.
-#### Form QTS 4.2.0 on, no support Optware.
+**Note:** From QTS 4.2.0 on, Optware is no longer supported.
 
-# License
+## License
 
 QDK is distributed under the GPL making it completely open and available for anyone to use.
 
-# Installation
+## Installation
 
 Download and install the QPKG file and it will automatically create the system-wide configuration file, /etc/config/qdk.conf, and when enabled it also creates a symlink for qbuild in /usr/bin. The reference manual is included in a separate zip file. There is also a document (QDK Cookbook) with solutions to different common situations that you could run into when using QDK to build QPKG packages.
 
-# How to add icons in QPKG
+## How to add icons in QPKG
+
 Location of directory with icons for the packaged software. Default location is a directory named icons in $QDK_ROOT_DIR. 
 The value must be a full path or a path relative to $QDK_ROOT_DIR. The icons shall be named ${QPKG_NAME}.gif, ${QPKG_NAME}_80.gif, and ${QPKG_NAME}_gray.gif.
 
@@ -28,17 +28,18 @@ The value must be a full path or a path relative to $QDK_ROOT_DIR. The icons sha
 
 * ${QPKG_NAME}_80.gif is the image displayed in the pop-up dialog (with information about the QPKG and the buttons to enable, disable, and remove). It should be a GIF image of 80x80 pixels. If no icons are included then the QPKG is given default icons at installation.
 
-# How to install QDK on Ubuntu
+## How to install QDK on Ubuntu
 
 ```
-sudo ./InstallToUbuntu.sh install
+# wget https://github.com/qnap-dev/QDK/releases/download/v2.5.0/qdk_2.5.0_${platform}.deb
+# sudo apt install ./qdk_2.5.0_${platform}.deb
 ```
 
-# QDK Quick Start Guide
+## QDK Quick Start Guide
 
 https://cheng-yuan-hong.gitbook.io/qdk-quick-start-guide/
 
-# Update new feature
+## Changelog
 
 2.5.0
 
@@ -62,7 +63,7 @@ https://cheng-yuan-hong.gitbook.io/qdk-quick-start-guide/
     -Force to use codesigning.qnap.com:5001 instead of 172.17.21.68:5000
     -Add preliminary support for newer code signing mechanism for 3rd party qpkg
     -Fix one minor bug while handling anti-tampering error
-    -Fix qpkg install failed keep file in nas
+    -Fix QPKG install failure keeping files on NAS
 
 2.3.10
 
@@ -72,12 +73,12 @@ https://cheng-yuan-hong.gitbook.io/qdk-quick-start-guide/
 
 2.3.9
 
-    -Some enhabcement and bug fix for code signing
+    -Some enhancement and bug fix for code signing
 
 2.3.8
 
     -Add build_sign.csv sample file
-    -Fix some bug
+    -Fix some bugs
 
 2.3.7
 
@@ -89,7 +90,7 @@ https://cheng-yuan-hong.gitbook.io/qdk-quick-start-guide/
 
 2.3.5
 
-    -Added qnap internal code signing and anti-tampering support.(After QTS vserion 4.4.x support code signing and anti-tampering funtion.)
+    -Added QNAP internal code signing and anti-tampering support. (After QTS version 4.4.x support code signing and anti-tampering function.)
 
 2.3.4
 
@@ -119,7 +120,7 @@ https://cheng-yuan-hong.gitbook.io/qdk-quick-start-guide/
 
 2.2.15
 	
-	-Add "export QNAP_QPKG" in sample start script. It is for Resource Monitor to monitor the folk process.
+	-Add "export QNAP_QPKG" in sample start script. It is for Resource Monitor to monitor the fork process.
 	-Add qbuild create md5sum file.
 	-Support png format.
 	-Change install log order.
@@ -128,7 +129,7 @@ https://cheng-yuan-hong.gitbook.io/qdk-quick-start-guide/
 2.2.14
 
 	-Add QNAP display name in qpkg.cfg.(The QPKG name displayed on QTS Web UI)
-	-Add support maxmum QTS version limitation.
+	-Add support maximum QTS version limitation.
 	-Fix template sample code bug.
 
 2.2.13
@@ -160,7 +161,7 @@ https://cheng-yuan-hong.gitbook.io/qdk-quick-start-guide/
 
 2.2.7
 
-	-Command qbuild could use build bumber
+	-Command qbuild could use build number
 
 2.2.6
 
@@ -171,5 +172,5 @@ https://cheng-yuan-hong.gitbook.io/qdk-quick-start-guide/
 
 	-New platform - support arm_x31, ce53xx(TS-269H) and arm_x41(TS-x31+,TAS-x68) architecture string.
 	-New option - “Web_SSL_Port” that can access Web via SSL port.
-	-Bug fix: support extract QPKG that builded by previous QDK.
+	-Bug fix: support extract QPKG that built by previous QDK.
 	-Add QPKG_DESKTOP_APP="1" option.
