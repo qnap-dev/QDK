@@ -523,8 +523,8 @@ perform_data_package_adaptor(){
 	fi
 }
 
-# Code signing related routines
-do_code_signing(){
+# Anti-tampering related routines
+do_anti_tampering(){
 	local build_dir="${1:-build.$$}"
 	msg "Connecting to code signing server to create anti-tampering data..."
 	[ -z "$QNAP_CODE_SIGNING_CSV" ] && QNAP_CODE_SIGNING_CSV="build_sign.csv"
@@ -577,9 +577,9 @@ create_data_package(){
 	cd - > /dev/null 2>&1
 
 	find . -type d -name '.qcodesigning' | xargs rm -rf
-	if [ "x${QNAP_CODE_SIGNING}" = "x1" ]; then
-		do_code_signing
-	fi
+	#if [ "x${QNAP_CODE_SIGNING}" = "x1" ]; then
+	#	do_anti_tampering
+	#fi
 
 	verbose_msg "Creating compressed tar archive..."
 	case "$QDK_COMPRESS_METHOD" in
