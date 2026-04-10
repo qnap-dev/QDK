@@ -1060,7 +1060,7 @@ add_qpkg_signature(){
 
 			case "$QDK_SIGNATURE" in
 				gpg)
-					local gpg_options="--detach-sign -o-"
+					local gpg_options="--no-default-keyring --keyring $QDK_GPG_PUBKEYRING --detach-sign -o-"
 					[ -n "$QDK_GPG_NAME" ] && gpg_options="$gpg_options -u $QDK_GPG_NAME"
 					is_quiet && gpg_options="$gpg_options --no-tty"
 					debug_msg "$QDK_GPG_APP $gpg_options $QDK_QPKG_FILE >> ${QDK_QPKG_FILE}.sig"
@@ -1592,7 +1592,7 @@ add_sign_qpkg(){
 			eval "$dd_cmd"
 
 			verbose_msg "Generate and add new signature..."
-			local gpg_options="--detach-sign -o-"
+			local gpg_options="--no-default-keyring --keyring $QDK_GPG_PUBKEYRING --detach-sign -o-"
 			[ -n "$QDK_GPG_NAME" ] && gpg_options="$gpg_options -u $QDK_GPG_NAME"
 			is_quiet && gpg_options="$gpg_options --no-tty"
 			gpg_cmd="$QDK_GPG_APP $gpg_options ${qpkg}.$$ >> ${qpkg}.sig"
