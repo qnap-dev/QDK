@@ -4,11 +4,8 @@ PKG_MAIN_REMOVE="{
 	$CMD_RM -f $QDK_CONF
 }"
 
-pkg_init(){
-	add_qpkg_config $QDK_CONF 0
-}
-
 pkg_install(){
+	add_qpkg_config $QDK_CONF 0
 	if [ -f "$QDK_CONF" ]; then
 		$CMD_SED -i "s!\(QDK_VERSION=\).*!\1$QPKG_VER!" $QDK_CONF
 		$CMD_SED -i "s!\(QDK_PATH=\).*!\1$SYS_QPKG_DIR!" $QDK_CONF
