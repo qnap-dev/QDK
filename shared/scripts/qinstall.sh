@@ -5,7 +5,7 @@
 #
 # A QPKG installation script for QDK
 #
-# QDK V.2.5.0
+# QDK V2.5.1
 #
 # Copyright (C) 2009,2010 QNAP Systems, Inc.
 # Copyright (C) 2010,2011 Michael Nordstrom

@@ -1,3 +1,12 @@
+qdk (2.5.1) UNRELEASED; urgency=medium
+
+  * Fix QTS version comparison to compare by segment
+  * Fix qbuild to preserve full version while truncating binary qpkg tail
+  * Stop anti-tampering to improve stability of QNAP build system
+  * Fix QPKG installation error
+
+ -- QNAP QDK <qdk@qnap.com>  Mon, 16 Jun 2026 00:00:00 +0800
+
 qdk (2.5.0) UNRELEASED; urgency=medium
 
   * Add Debian packaging and GitHub release workflow

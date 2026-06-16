@@ -31,8 +31,8 @@ The value must be a full path or a path relative to $QDK_ROOT_DIR. The icons sha
 ## How to install QDK on Ubuntu
 
 ```
-# wget https://github.com/qnap-dev/QDK/releases/download/v2.5.0/qdk_2.5.0_${platform}.deb
-# sudo apt install ./qdk_2.5.0_${platform}.deb
+# wget https://github.com/qnap-dev/QDK/releases/download/v2.5.1/qdk_2.5.1_${platform}.deb
+# sudo apt install ./qdk_2.5.1_${platform}.deb
 ```
 
 ## QDK Quick Start Guide
@@ -40,6 +40,13 @@ The value must be a full path or a path relative to $QDK_ROOT_DIR. The icons sha
 https://cheng-yuan-hong.gitbook.io/qdk-quick-start-guide/
 
 ## Changelog
+
+2.5.1
+
+    - Fix QTS version comparison to compare by segment
+    - Fix qbuild to preserve full version while truncating binary qpkg tail
+    - Stop anti-tampering to improve stability of QNAP build system
+    - Fix QPKG installation error
 
 2.5.0
 
