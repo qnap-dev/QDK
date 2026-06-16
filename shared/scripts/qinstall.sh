@@ -511,19 +511,9 @@ remove_file_and_empty_dir(){
 # Check QTS minimum version.
 #############################
 check_qts_version(){
-	NOW_VERSION=`/sbin/getcfg System Version -f /etc/config/uLinux.conf|cut -c 1,3,5`
-	if [ -e $QTS_MINI_VERSION ]; then
-		MINI_VERSION=0
-	else
-		MINI_VERSION=`echo "$QTS_MINI_VERSION"|cut -c 1,3,5`
-	fi
-	if [ -e $QTS_MAX_VERSION ]; then
-		MAX_VERSION=1000
-	else
-		MAX_VERSION=`echo "$QTS_MAX_VERSION"|cut -c 1,3,5`
-	fi
+	local now_version=`/sbin/getcfg System Version -f /etc/config/uLinux.conf`
 
-	if [ ${MINI_VERSION} -gt ${NOW_VERSION} ]; then
+	if [ -n "$QTS_MINI_VERSION" ] && is_less "$now_version" "$QTS_MINI_VERSION"; then
 		if [ -x "/usr/local/sbin/notify" ]; then
 			/usr/local/sbin/notify send -A A039 -C C001 -M 40 -l error -t 3 "[{0}] {1} install failed due to the QTS firmware is not compatible, please upgrade QTS to {2} or newer version." "$PREFIX" "$QPKG_DISPLAY_NAME" "$QTS_MINI_VERSION"
 			set_progress_fail
@@ -531,7 +521,7 @@ check_qts_version(){
 		else
 			err_log "[$PREFIX] Failed to install $QPKG_DISPLAY_NAME. Upgrade QTS to $QTS_MINI_VERSION or a newer compatible version."
 		fi
-	elif [ ${MAX_VERSION} -lt ${NOW_VERSION} ]; then
+	elif [ -n "$QTS_MAX_VERSION" ] && is_greater "$now_version" "$QTS_MAX_VERSION"; then
 		if [ -x "/usr/local/sbin/notify" ]; then
 			/usr/local/sbin/notify send -A A039 -C C001 -M 41 -l error -t 3 "[{0}] {1} install failed due to the QTS firmware is not compatible, please downgrade QTS to {2} or newer version." "$PREFIX" "$QPKG_DISPLAY_NAME" "$QTS_MAX_VERSION"
 			set_progress_fail
