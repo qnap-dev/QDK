@@ -1,3 +1,11 @@
+qdk (2.5.2) UNRELEASED; urgency=medium
+
+  * Revert the qbuild binary-tail truncation change from 2.5.1.
+  * Preserve versions such as 0.1.1.2101 in the binary tail when they fit the
+    10-character field, avoiding misleading App Center update logs.
+
+ -- QNAP QDK <qdk@qnap.com>  Tue, 16 Jun 2026 18:06:13 +0800
+
 qdk (2.5.1) UNRELEASED; urgency=medium
 
   * Fix QTS version comparison to compare by segment
@@ -5,7 +13,7 @@ qdk (2.5.1) UNRELEASED; urgency=medium
   * Stop anti-tampering to improve stability of QNAP build system
   * Fix QPKG installation error
 
- -- QNAP QDK <qdk@qnap.com>  Mon, 16 Jun 2026 00:00:00 +0800
+ -- QNAP QDK <qdk@qnap.com>  Tue, 16 Jun 2026 10:37:19 +0800
 
 qdk (2.5.0) UNRELEASED; urgency=medium
 
