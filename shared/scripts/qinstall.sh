@@ -106,6 +106,7 @@ SYS_QPKG_CONF_FIELD_PROXY_PATH="Proxy_Path"
 SYS_QPKG_CONF_FIELD_TIMEOUT="Timeout"
 SYS_QPKG_CONF_FIELD_VISIBLE="Visible"
 SYS_QPKG_CONF_FIELD_FORCE_VISIBLE="Force_Visible"
+SYS_QPKG_CONF_FIELD_DISTRIBUTION_TYPE="Distribution_Type"
 SYS_QPKG_CONF_FIELD_CONTAINER="Container"
 SYS_QPKG_CONF_FIELD_EXEC_FILES="Exec_Files"
 SYS_QPKG_CONF_FIELD_FW_VER_MIN="FW_Ver_Min"
@@ -812,6 +813,9 @@ set_qpkg_force_visible(){
 		set_qpkg_field $SYS_QPKG_CONF_FIELD_FORCE_VISIBLE "$QPKG_FORCE_VISIBLE"
 	fi
 }
+set_qpkg_distribution_type(){
+	set_qpkg_field $SYS_QPKG_CONF_FIELD_DISTRIBUTION_TYPE "${QPKG_DISTRIBUTION_TYPE:-0}"
+}
 set_qpkg_fw_ver_min(){
 	if [ -n "$QTS_MINI_VERSION" ]; then
 		set_qpkg_field $SYS_QPKG_CONF_FIELD_FW_VER_MIN "$QTS_MINI_VERSION"
@@ -950,6 +954,7 @@ register_qpkg(){
 	set_qpkg_timeout
 	set_qpkg_visible
 	set_qpkg_force_visible
+	set_qpkg_distribution_type
 	set_qpkg_container
 	set_qpkg_exec_file
 	set_qpkg_fw_ver_min
