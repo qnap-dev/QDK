@@ -79,6 +79,7 @@ SYS_QPKG_DATA_BUILTVER_FILE="./built_version"
 SYS_QPKG_DATA_BUILTINFO_FILE="./built_info"
 SYS_QPKG_DATA_PACKAGES_FILE="./Packages.gz"
 SYS_QPKG_CONFIG_FILE="$SYS_CONFIG_DIR/qpkg.conf"
+SYS_DEFAULT_ULINUX_CONF="/etc/default_config/uLinux.conf"
 SYS_QPKG_CONF_FIELD_QPKGFILE="QPKG_File"
 SYS_QPKG_CONF_FIELD_NAME="Name"
 SYS_QPKG_CONF_FIELD_DISPLAY_NAME="Display_Name"
@@ -511,7 +512,7 @@ remove_file_and_empty_dir(){
 # Check QTS minimum version.
 #############################
 check_qts_version(){
-	local now_version=`/sbin/getcfg System Version -f /etc/config/uLinux.conf`
+	local now_version=`/sbin/getcfg System Version -f "$SYS_DEFAULT_ULINUX_CONF"`
 
 	if [ -n "$QTS_MINI_VERSION" ] && is_less "$now_version" "$QTS_MINI_VERSION"; then
 		if [ -x "/usr/local/sbin/notify" ]; then
