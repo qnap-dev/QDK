@@ -28,6 +28,7 @@ case "$1" in
 	;;
 	remove)
 		echo "Remove QDK"
+		rm -rf "/bin/qpkg_encrypt"
 		rm -rf "/etc/config/qdk.conf"
 		rm -rf "/usr/share/QDK"
 		sed -i '/QDK/d' ~/.bashrc
