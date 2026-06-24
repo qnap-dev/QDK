@@ -28,6 +28,7 @@
 
 ##### System definitions #####
 PREFIX="App Center"
+DEFAULT_ULINUX_CONF="/etc/default_config/uLinux.conf"
 
 ##### Command definitions #####
 CMD_AWK="${CMD_AWK:-$(command -v awk)}"
@@ -37,7 +38,7 @@ if [ ! -e "$CS_PYTHON" ]; then
 CS_PYTHON="/usr/local/bin/python2"
 fi
 
-if [ -f "/etc/config/uLinux.conf" ]; then
+if [ -f "$DEFAULT_ULINUX_CONF" ]; then
     IS_NAS="TRUE"
 else
     IS_NAS="FALSE"
