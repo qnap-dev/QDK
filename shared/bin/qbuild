@@ -1061,7 +1061,7 @@ add_qpkg_signature(){
 
 			case "$QDK_SIGNATURE" in
 				gpg)
-					local gpg_options="--detach-sign -o-"
+					local gpg_options="--no-default-keyring --keyring $QDK_GPG_PUBKEYRING --detach-sign -o-"
 					[ -n "$QDK_GPG_NAME" ] && gpg_options="$gpg_options -u $QDK_GPG_NAME"
 					is_quiet && gpg_options="$gpg_options --no-tty"
 					debug_msg "$QDK_GPG_APP $gpg_options $QDK_QPKG_FILE >> ${QDK_QPKG_FILE}.sig"
@@ -1593,12 +1593,15 @@ add_sign_qpkg(){
 			eval "$dd_cmd"
 
 			verbose_msg "Generate and add new signature..."
-			local gpg_options="--detach-sign -o-"
+			local gpg_options="--no-default-keyring --keyring $QDK_GPG_PUBKEYRING --detach-sign -o-"
 			[ -n "$QDK_GPG_NAME" ] && gpg_options="$gpg_options -u $QDK_GPG_NAME"
 			is_quiet && gpg_options="$gpg_options --no-tty"
 			gpg_cmd="$QDK_GPG_APP $gpg_options ${qpkg}.$$ >> ${qpkg}.sig"
 			debug_msg "$gpg_cmd"
-			eval $gpg_cmd || warn_msg "${qpkg##*/}: no signature added"
+			if ! eval $gpg_cmd || [ ! -s ${qpkg}.sig ]; then
+				/bin/rm -f ${qpkg}.$$ ${qpkg}.sig
+				err_msg "${qpkg##*/}: no signature added"
+			fi
 
 			add_qdk_area_begin ${qpkg}.$$
 			add_qdk_area_signature ${qpkg}.sig ${qpkg}.$$
@@ -2142,15 +2145,15 @@ usage: $(/usr/bin/basename $0) [--extract QPKG [DIR]] [--create-env NAME] [-s|--
 	  conflict	list conflicting packages
 	  funcs		output package specific functions
 --sign
-	Generate and insert digital signature to QPKG. By default the first key
-	in the secret keyring is used.
+	Generate and insert digital signature to QPKG using the public keyring
+	specified by QDK_GPG_PUBKEYRING (default: /etc/config/qpkg.gpg).
 --gpg-name ID
 	Use specified user ID to sign QPKG.
 --verify QPKG
 	Verify digital signature assigned to QPKG.
 --add-sign QPKG
 	Generate and insert digital signature to QPKG, replacing any existing
-	signature.
+	signature. Uses QDK_GPG_PUBKEYRING in the same way as --sign.
 --import-key KEY
 	Import ASCII armored key to public keyring.
 --list-keys

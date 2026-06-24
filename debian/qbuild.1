@@ -148,8 +148,8 @@ output package specific functions
 .PP
 \fB\-\-sign\fR
 .IP
-Generate and insert digital signature to QPKG. By default the first key
-in the secret keyring is used.
+Generate and insert digital signature to QPKG using the public keyring
+specified by QDK_GPG_PUBKEYRING (default: /etc/config/qpkg.gpg).
 .PP
 \fB\-\-gpg\-name\fR ID
 .IP
@@ -162,7 +162,7 @@ Verify digital signature assigned to QPKG.
 \fB\-\-add\-sign\fR QPKG
 .IP
 Generate and insert digital signature to QPKG, replacing any existing
-signature.
+signature. Uses QDK_GPG_PUBKEYRING in the same way as \fB\-\-sign\fR.
 .PP
 \fB\-\-import\-key\fR KEY
 .IP
