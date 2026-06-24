@@ -31,8 +31,8 @@ The value must be a full path or a path relative to $QDK_ROOT_DIR. The icons sha
 ## How to install QDK on Ubuntu
 
 ```
-# wget https://github.com/qnap-dev/QDK/releases/download/v2.5.2/qdk_2.5.2_${platform}.deb
-# sudo apt install ./qdk_2.5.2_${platform}.deb
+# wget https://github.com/qnap-dev/QDK/releases/download/v2.5.3/qdk_2.5.3_${platform}.deb
+# sudo apt install ./qdk_2.5.3_${platform}.deb
 ```
 
 ## QDK Quick Start Guide
@@ -40,6 +40,12 @@ The value must be a full path or a path relative to $QDK_ROOT_DIR. The icons sha
 https://cheng-yuan-hong.gitbook.io/qdk-quick-start-guide/
 
 ## Changelog
+
+2.5.3
+
+    - Use the specified GPG keyring when generating QPKG signatures
+    - Read /etc/default_config/uLinux.conf for NAS detection and QTS version checks
+    - Remove qpkg_encrypt when uninstalling QDK on Ubuntu
 
 2.5.2
 
