@@ -1100,7 +1100,16 @@ add_qpkg_tail(){
 	pad_field _QPKG_MODEL
 	_QPKG_NAME="$QPKG_NAME_SHORTER"
 	pad_field _QPKG_NAME 20
+	# The binary qpkg tail has a fixed 10-char version field. Keep the full
+	# version in qpkg.cfg; only the on-disk tail is constrained here. Truncate
+	# by length (not by dropping version segments) so values that already fit
+	# are left intact.
+	local max_qpkg_ver_len=10
 	_QPKG_VERSION="$QPKG_VER"
+	if [ $max_qpkg_ver_len -lt ${#_QPKG_VERSION} ]; then
+		_QPKG_VERSION=$(/usr/bin/expr substr "$_QPKG_VERSION" 1 $max_qpkg_ver_len)
+		verbose_msg "QPKG tail version set to $_QPKG_VERSION (full version $QPKG_VER preserved in qpkg.cfg)"
+	fi
 	pad_field _QPKG_VERSION
 	printf "${_QPKG_MODEL}${space_50}${_QPKG_NAME}${_QPKG_VERSION}${flag}" >> $QDK_QPKG_FILE
 	debug_msg "${_QPKG_MODEL}${space_50}${_QPKG_NAME}${_QPKG_VERSION}${flag}"
@@ -1297,18 +1306,14 @@ truncate_qpkg_name(){
 	fi
 }
 
-# Handle max lenght and any space in version; anything after a space is removed.
+# Handle any space in version; anything after a space is removed.
+# The full version (including build number) is preserved in qpkg.cfg so the
+# installer log and stored Version field show it in full. The binary qpkg tail
+# is constrained to its fixed 10-char field separately in add_qpkg_tail.
 truncate_qpkg_version(){
 	if [ "$QPKG_VER" != "${QPKG_VER%% *}" ]; then
 		warn_msg "QPKG_VER: space is not allowed; value truncated."
 		edit_qpkg_config QPKG_VER "${QPKG_VER%% *}"
-	fi
-
-	local max_qpkg_ver_len=10
-	if [ $max_qpkg_ver_len -lt ${#QPKG_VER} ]; then
-		warn_msg "QPKG_VER: the length of $QPKG_VER must be less than or equal to $max_qpkg_ver_len; value truncated."
-		QPKG_VER=$(/usr/bin/expr substr "$QPKG_VER" 1 $max_qpkg_ver_len)
-		edit_qpkg_config QPKG_VER "$QPKG_VER"
 	fi
 }
 
